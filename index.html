@@ -151,7 +151,7 @@
 
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
-    <p class="wordmark" aria-hidden="true"><span class="wordmark__time">Time</span><span class="wordmark__pockets">Pockets</span></p>
+    <p class="wordmark" aria-hidden="true"><img class="wordmark__coin" src="images/tock.webp" width="112" height="112" alt="" loading="lazy" decoding="async"><span><span class="wordmark__time">Time</span><span class="wordmark__pockets">Pockets</span></span></p>
     <p class="site-footer__email"><a href="mailto:contact@timepockets.co.uk">contact@timepockets.co.uk</a></p>
     <ul class="site-footer__links">
       <li><a href="https://www.facebook.com/timepockets">Facebook</a></li>
@@ -223,7 +223,8 @@
       fetch(action, { method: "POST", mode: "no-cors", body: data })
         .then(function () {
           form.reset();
-          show("Thank you. We’ll be in touch when the app is ready. If an email arrives asking you to confirm your address, please click the link in it.");
+          show("Nearly there. Please click the link in the email we’ve just sent you to confirm your address. If you can’t see it, check your junk or spam folder. Once you’ve confirmed, we’ll email you when the app is ready" +
+            (wantsNews ? ", plus occasional TimePockets news." : "."));
         })
         .catch(function () {
           show("Sorry, that didn’t go through. Please try again, or", draftLink(email, wantsNews), "email us instead");

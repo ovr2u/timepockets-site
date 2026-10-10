@@ -329,7 +329,6 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 10px 14px;
   border-radius: 12px;
   background: var(--teal-tint);
-  font-weight: 700;
 }
 
 /* About */
@@ -351,11 +350,15 @@ a:hover { text-decoration-thickness: 2px; }
 .site-footer :focus-visible { outline-color: var(--teal); }
 
 .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.75rem;
   line-height: 1;
 }
+.wordmark__coin { width: 44px; height: 44px; }
 .wordmark__time { color: var(--cream); }
 .wordmark__pockets { color: var(--teal); }
 
