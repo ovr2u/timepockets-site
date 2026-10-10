@@ -223,7 +223,7 @@
       fetch(action, { method: "POST", mode: "no-cors", body: data })
         .then(function () {
           form.reset();
-          show("Nearly there. Please click the link in the email we’ve just sent you to confirm your address. If you can’t see it, check your junk or spam folder. Once you’ve confirmed, we’ll email you when the app is ready" +
+          show("Nearly there. We’ve just sent you an email from TimePockets: please click the button in it to confirm your address. If you can’t see it, check your junk or spam folder. Once you’ve confirmed, we’ll email you when the app is ready" +
             (wantsNews ? ", plus occasional TimePockets news." : "."));
         })
         .catch(function () {
