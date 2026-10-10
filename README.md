@@ -2,7 +2,7 @@
 
 The landing page for TimePockets: printable workbooks for brilliant, busy brains, and the TimePockets app (coming soon).
 
-Plain static files, served by GitHub Pages from `main`. No framework, no build step, no cookies, no analytics, no third-party requests.
+Plain static files, served by GitHub Pages from `main`. No framework, no build step, no cookies, no analytics, and nothing loaded from other sites. The only outside request is the sign-up itself, to MailerLite.
 
 ```
 index.html            the page (copy, form and the small sign-up script)
@@ -12,21 +12,23 @@ fonts/                Fredoka and Andika, self-hosted so no visitor data goes to
 favicon.ico           browser tab icon
 apple-touch-icon.png  phone home-screen icon
 .nojekyll             tells GitHub Pages to serve the files as they are
+CNAME                 the custom domain, written by GitHub
 ```
 
-## Things to swap in later
+## Mailing list (MailerLite)
 
-All in `index.html`, each marked with a `PLACEHOLDER` or `MAILING LIST` comment.
+The sign-up form is in `index.html`, under the `MAILING LIST` comment. It takes two MailerLite embedded form action URLs:
 
-- **Etsy shop link.** Currently `https://www.etsy.com/uk/shop/TimePockets`, used three times. Find and replace it.
-- **Facebook link.** Currently `https://www.facebook.com/timepockets`, in the footer.
-- **Mailing list.** Paste your Kit or MailerLite form action into `data-list-action=""` on the sign-up form. The script works out which provider it is and sends the email address in the field that provider expects (`email_address` for Kit, `fields[email]` for MailerLite). While it is empty, "Keep me posted" opens an email draft to hello@timepockets.co.uk with the subject "Keep me posted". After pasting, sign up once with your own address and check it arrives in the provider, because the browser cannot read the provider's reply and so always shows the thank-you message.
+- `data-list-action`: the form that adds people to the **App launch** group.
+- `data-list-action-news`: the form that adds people to **App launch** and **TimePockets news**. It is used when the "occasional TimePockets news" box is ticked. The box always starts unticked.
+
+While `data-list-action` is empty, "Keep me posted" opens an email draft to contact@timepockets.co.uk with the subject "Keep me posted", saying whether they ticked the news box. After pasting the URLs, sign up once with and once without the box ticked, and check each address lands in the right groups. The browser cannot read MailerLite's reply, so it always shows the thank-you message.
 
 ## Custom domain
 
-The `CNAME` file is added when the domain moves, not before. While it is absent the site can be previewed at `https://ovr2u.github.io/timepockets-site/`. Once it exists, that address redirects to timepockets.co.uk.
+Done. GitHub added the `CNAME` file when the custom domain was saved, and `https://ovr2u.github.io/timepockets-site/` now redirects to timepockets.co.uk. For the record:
 
-1. In GoDaddy DNS for timepockets.co.uk, remove any existing A records for `@` and any CNAME for `www`, then add:
+1. In the 123 Reg DNS (it runs on GoDaddy's systems) for timepockets.co.uk, remove any existing A records for `@` and any CNAME for `www`, then add:
 
    | Type  | Name | Value             |
    |-------|------|-------------------|

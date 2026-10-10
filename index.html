@@ -59,7 +59,6 @@
         <span class="lead__small">Made in the UK by an ADHD parent who wanted more engaging resources for her own busy-brained kid.</span>
       </p>
       <div class="actions">
-        <!-- PLACEHOLDER Etsy link: replace with the real shop URL (it appears 3 times on this page) -->
         <a class="btn" href="https://www.etsy.com/uk/shop/TimePockets">Shop the workbooks</a>
         <a class="btn btn--quiet" href="#signup">Keep me posted about the app</a>
       </div>
@@ -103,20 +102,23 @@
           </ul>
 
           <!-- ================================================================
-               MAILING LIST: this is the one place to paste your form action.
+               MAILING LIST: this is the one place to paste your form actions.
 
-               Put your Kit or MailerLite form action URL between the quotes
-               of data-list-action="" below, save, and you are done.
-                 Kit looks like:
-                   https://app.kit.com/forms/1234567/subscriptions
-                 MailerLite looks like:
-                   https://assets.mailerlite.com/jsonp/123456/forms/123456789012345678/subscribe
+               Each MailerLite embedded form has an action URL that looks like:
+                 https://assets.mailerlite.com/jsonp/123456/forms/123456789012345678/subscribe
 
-               While it is empty, "Keep me posted" opens an email draft to
-               hello@timepockets.co.uk with the subject "Keep me posted".
+               data-list-action       the form that adds people to "App launch"
+               data-list-action-news  the form that adds people to "App launch"
+                                      AND "TimePockets news" (used when the box
+                                      is ticked)
+
+               While data-list-action is empty, "Keep me posted" opens an email
+               draft to contact@timepockets.co.uk with the subject "Keep me posted".
                ================================================================ -->
-          <form class="signup" id="signup" data-list-action=""
-                action="mailto:hello@timepockets.co.uk" method="get">
+          <form class="signup" id="signup"
+                data-list-action=""
+                data-list-action-news=""
+                action="mailto:contact@timepockets.co.uk" method="get">
             <input type="hidden" name="subject" value="Keep me posted">
             <label class="signup__label" for="signup-email">Your email address</label>
             <div class="signup__row">
@@ -125,7 +127,11 @@
                      aria-describedby="signup-note">
               <button class="btn" type="submit">Keep me posted</button>
             </div>
-            <p class="signup__note" id="signup-note">We’ll email you when the app is ready, and nothing else. Unsubscribe any time.</p>
+            <label class="signup__check">
+              <input type="checkbox" name="news" value="yes">
+              <span>Also send me occasional TimePockets news, like new workbooks.</span>
+            </label>
+            <p class="signup__note" id="signup-note">We’ll email you when the app is ready, and only send other news if you tick the box. We never pass your email on, and every email has an unsubscribe link.</p>
             <p class="signup__status" role="status"></p>
           </form>
         </div>
@@ -146,13 +152,12 @@
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
     <p class="wordmark" aria-hidden="true"><span class="wordmark__time">Time</span><span class="wordmark__pockets">Pockets</span></p>
-    <p class="site-footer__email"><a href="mailto:hello@timepockets.co.uk">hello@timepockets.co.uk</a></p>
+    <p class="site-footer__email"><a href="mailto:contact@timepockets.co.uk">contact@timepockets.co.uk</a></p>
     <ul class="site-footer__links">
-      <!-- PLACEHOLDER Facebook link: replace with the real page URL -->
       <li><a href="https://www.facebook.com/timepockets">Facebook</a></li>
       <li><a href="https://www.etsy.com/uk/shop/TimePockets">Etsy</a></li>
     </ul>
-    <p class="site-footer__privacy"><strong>Privacy.</strong> If you join the list, we keep only the email address you give us, and we use it only to tell you about the app. We never share it, and you can unsubscribe any time. This site sets no cookies and uses no analytics or tracking of any kind.</p>
+    <p class="site-footer__privacy"><strong>Privacy.</strong> If you join the list, we keep only the email address you give us. We use it to tell you about the app, and to send occasional TimePockets news only if you ticked the box for it. The list is stored with MailerLite, the service we use to send our emails, and we never share it with anyone else. Every email has an unsubscribe link. This site sets no cookies and uses no analytics or tracking of any kind.</p>
     <p class="site-footer__copy">© 2026 TimePockets</p>
   </div>
 </footer>
@@ -163,15 +168,18 @@
     if (!form || !window.fetch) return;
 
     var input = form.querySelector(".signup__input");
+    var news = form.querySelector("input[name=news]");
     var button = form.querySelector("button[type=submit]");
     var status = form.querySelector(".signup__status");
-    var INBOX = "hello@timepockets.co.uk";
+    var INBOX = "contact@timepockets.co.uk";
 
-    function draftLink(email) {
+    function draftLink(email, wantsNews) {
       return "mailto:" + INBOX +
         "?subject=" + encodeURIComponent("Keep me posted") +
         "&body=" + encodeURIComponent(
-          "Please email me when the TimePockets app is ready.\n\nMy email address: " + email);
+          "Please email me when the TimePockets app is ready." +
+          (wantsNews ? " I'd also like occasional TimePockets news." : "") +
+          "\n\nMy email address: " + email);
     }
 
     function show(text, linkHref, linkText) {
@@ -189,24 +197,26 @@
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       var email = input.value.trim();
+      var wantsNews = news.checked;
       var action = (form.getAttribute("data-list-action") || "").trim();
+      var newsAction = (form.getAttribute("data-list-action-news") || "").trim();
 
-      // No mailing provider yet: open an email draft instead.
+      // No mailing list yet: open an email draft instead.
       if (!action) {
-        window.location.href = draftLink(email);
-        show("Your email app should open with a message ready to send. If nothing happens, you can", draftLink(email), "email us directly");
+        window.location.href = draftLink(email, wantsNews);
+        show("Your email app should open with a message ready to send. If nothing happens, you can", draftLink(email, wantsNews), "email us directly");
         return;
       }
 
-      // Kit and MailerLite name the email field differently.
+      // The news form adds people to both groups. Without it, a ticked box
+      // still joins the app list only, never more than they asked for.
+      if (wantsNews && newsAction) action = newsAction;
+
+      // Field names MailerLite's embedded forms expect.
       var data = new URLSearchParams();
-      if (/mailerlite/i.test(action)) {
-        data.append("fields[email]", email);
-        data.append("ml-submit", "1");
-        data.append("anticsrf", "true");
-      } else {
-        data.append("email_address", email);
-      }
+      data.append("fields[email]", email);
+      data.append("ml-submit", "1");
+      data.append("anticsrf", "true");
 
       button.disabled = true;
       show("Sending…");
@@ -216,7 +226,7 @@
           show("Thank you. We’ll be in touch when the app is ready. If an email arrives asking you to confirm your address, please click the link in it.");
         })
         .catch(function () {
-          show("Sorry, that didn’t go through. Please try again, or", draftLink(email), "email us instead");
+          show("Sorry, that didn’t go through. Please try again, or", draftLink(email, wantsNews), "email us instead");
         })
         .then(function () {
           button.disabled = false;

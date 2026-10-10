@@ -304,6 +304,21 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .signup__input:focus-visible { border-radius: 14px; }
 .signup__row .btn { flex: 1 1 auto; }
+.signup__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  cursor: pointer;
+}
+.signup__check input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 1px 0 0;
+  accent-color: var(--teal-ink);
+  cursor: pointer;
+}
 .signup__note {
   margin-top: 12px;
   font-size: 1rem;
